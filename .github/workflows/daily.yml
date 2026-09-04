@@ -43,3 +43,23 @@ jobs:
             git commit -m "Add daily LeetCode solution"
             git push
           fi
+
+      - name: Send Email
+        if: success()
+        uses: dawidd6/action-send-mail@v6
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: Daily LeetCode AI Solution
+          to: ${{ secrets.EMAIL_TO }}
+          from: ${{ secrets.EMAIL_USERNAME }}
+          body: |
+            Your daily LeetCode AI solution has been generated successfully.
+
+            Check your GitHub repository:
+            https://github.com/hemrajvarma572/Leetcode-Ai-Agent/tree/main/solutions
+
+            The Java solution was compiled successfully.
