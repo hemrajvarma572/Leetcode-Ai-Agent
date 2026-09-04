@@ -3,6 +3,7 @@
     "group-anagrams",
     "valid-palindrome",
     "3sum",
-    "contains-duplicate"
+    "contains-duplicate",
+    "find-resultant-array-after-removing-anagrams"
   ]
 }
