@@ -7,7 +7,7 @@ from problem_selector import select_problem
 
 GEMINI_URL = (
     "https://generativelanguage.googleapis.com/v1beta/"
-    "models/gemini-2.5-flash:generateContent"
+    "models/gemini-3.1-flash-lite:generateContent"
 )
 
 SOLVED_FILE = "data/solved.json"
