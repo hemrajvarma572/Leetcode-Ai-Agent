@@ -1,7 +1,6 @@
 import json
 import random
 import requests
-import os
 
 
 SOLVED_FILE = "data/solved.json"
@@ -30,23 +29,48 @@ def download_problems():
 
     response = requests.get(
         DATABASE_URL,
-        timeout=60
+        timeout=120
     )
 
     response.raise_for_status()
 
     data = response.json()
 
-    if not isinstance(data, list):
-        raise Exception(
-            "Unexpected database format."
-        )
+    # The database may be a list
+    if isinstance(data, list):
+        return data
 
-    print(
-        f"Database loaded: {len(data)} problems"
+    # Or it may be wrapped inside a dictionary
+    if isinstance(data, dict):
+
+        for key in [
+            "problems",
+            "questions",
+            "data",
+            "problemsetQuestionList",
+            "problemsetQuestionListV2"
+        ]:
+
+            value = data.get(key)
+
+            if isinstance(value, list):
+                return value
+
+            if isinstance(value, dict):
+
+                for nested_key in [
+                    "questions",
+                    "problems"
+                ]:
+
+                    nested = value.get(nested_key)
+
+                    if isinstance(nested, list):
+                        return nested
+
+    raise Exception(
+        "Could not find problem list in database."
     )
-
-    return data
 
 
 def select_problem():
@@ -55,21 +79,50 @@ def select_problem():
 
     problems = download_problems()
 
+    print(
+        f"Database contains {len(problems)} problems."
+    )
+
     available = []
 
     for problem in problems:
 
+        if not isinstance(problem, dict):
+            continue
+
         slug = problem.get(
             "problem_slug",
-            ""
+            problem.get(
+                "titleSlug",
+                problem.get("slug", "")
+            )
         )
 
         problem_id = problem.get(
             "frontend_id",
-            problem.get("problem_id", "")
+            problem.get(
+                "frontendQuestionId",
+                problem.get(
+                    "problem_id",
+                    problem.get("id", "")
+                )
+            )
+        )
+
+        title = problem.get(
+            "title",
+            ""
+        )
+
+        difficulty = problem.get(
+            "difficulty",
+            ""
         )
 
         if not slug:
+            continue
+
+        if not problem_id:
             continue
 
         if slug in solved:
@@ -77,15 +130,9 @@ def select_problem():
 
         available.append({
             "id": str(problem_id),
-            "title": problem.get(
-                "title",
-                ""
-            ),
+            "title": title,
             "slug": slug,
-            "difficulty": problem.get(
-                "difficulty",
-                ""
-            )
+            "difficulty": difficulty
         })
 
     if not available:
@@ -93,16 +140,12 @@ def select_problem():
             "No unsolved problems available!"
         )
 
-    problem = random.choice(
-        available
-    )
-
     print(
         f"Available unsolved problems: "
         f"{len(available)}"
     )
 
-    return problem
+    return random.choice(available)
 
 
 if __name__ == "__main__":
