@@ -4,6 +4,7 @@
     "valid-palindrome",
     "3sum",
     "contains-duplicate",
-    "find-resultant-array-after-removing-anagrams"
+    "find-resultant-array-after-removing-anagrams",
+    "function-composition"
   ]
 }
