@@ -2,34 +2,47 @@ import json
 import random
 import requests
 
-PROBLEMS_URL = (
-    "https://raw.githubusercontent.com/"
-    "mcaupybugs/leetcode-problems-db/master/merged_problems.json"
-)
-
 SOLVED_FILE = "data/solved.json"
+
+# Public LeetCode problem list
+URL = "https://raw.githubusercontent.com/CodepediaOrg/codepedia/master/leetcode.json"
 
 
 def load_solved():
-    with open(SOLVED_FILE, "r") as file:
-        return set(json.load(file)["solved"])
-
-
-def save_solved(slug):
-    with open(SOLVED_FILE, "r") as file:
-        data = json.load(file)
-
-    data["solved"].append(slug)
-
-    with open(SOLVED_FILE, "w") as file:
-        json.dump(data, file, indent=2)
+    try:
+        with open(SOLVED_FILE, "r") as f:
+            data = json.load(f)
+            return set(data.get("solved", []))
+    except FileNotFoundError:
+        return set()
 
 
 def get_problems():
-    response = requests.get(PROBLEMS_URL, timeout=30)
+    response = requests.get(URL, timeout=30)
     response.raise_for_status()
 
-    return response.json()
+    data = response.json()
+
+    if not isinstance(data, list):
+        raise ValueError("Problem database is not a list")
+
+    problems = []
+
+    for p in data:
+        if not isinstance(p, dict):
+            continue
+
+        title = p.get("title")
+        slug = p.get("slug")
+
+        if title and slug:
+            problems.append({
+                "title": title,
+                "slug": slug,
+                "url": f"https://leetcode.com/problems/{slug}/"
+            })
+
+    return problems
 
 
 def select_problem():
@@ -38,12 +51,11 @@ def select_problem():
 
     available = [
         p for p in problems
-        if p.get("problem_slug") not in solved
-        and not p.get("isPaidOnly", False)
+        if p["slug"] not in solved
     ]
 
     if not available:
-        raise Exception("No new problems available!")
+        raise Exception("No new problems available")
 
     return random.choice(available)
 
@@ -51,10 +63,10 @@ def select_problem():
 if __name__ == "__main__":
     problem = select_problem()
 
-    print("Today's LeetCode problem:")
-    print("ID:", problem.get("frontend_id"))
-    print("Title:", problem.get("title"))
-    print("Difficulty:", problem.get("difficulty"))
-    print("Slug:", problem.get("problem_slug"))
-
-    save_solved(problem.get("problem_slug"))
+    print("================================")
+    print("TODAY'S LEETCODE PROBLEM")
+    print("================================")
+    print("Title:", problem["title"])
+    print("Slug:", problem["slug"])
+    print("URL:", problem["url"])
+    print("================================")
