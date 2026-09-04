@@ -1,46 +1,70 @@
 import json
 import random
-import requests
 
 SOLVED_FILE = "data/solved.json"
 
-LEETCODE_URL = "https://leetcode.com/graphql"
-
-QUERY = """
-query problemsetQuestionListV2(
-    $filters: QuestionFilterInput,
-    $limit: Int,
-    $searchKeyword: String,
-    $skip: Int,
-    $sortBy: QuestionSortByInput,
-    $categorySlug: String
-) {
-    problemsetQuestionListV2(
-        filters: $filters
-        limit: $limit
-        searchKeyword: $searchKeyword
-        skip: $skip
-        sortBy: $sortBy
-        categorySlug: $categorySlug
-    ) {
-        questions {
-            id
-            titleSlug
-            title
-            questionFrontendId
-            paidOnly
-            difficulty
-            topicTags {
-                name
-                slug
-            }
-        }
-        totalLength
-        finishedLength
-        hasMore
+PROBLEMS = [
+    {
+        "id": "1",
+        "title": "Two Sum",
+        "slug": "two-sum",
+        "difficulty": "Easy"
+    },
+    {
+        "id": "20",
+        "title": "Valid Parentheses",
+        "slug": "valid-parentheses",
+        "difficulty": "Easy"
+    },
+    {
+        "id": "121",
+        "title": "Best Time to Buy and Sell Stock",
+        "slug": "best-time-to-buy-and-sell-stock",
+        "difficulty": "Easy"
+    },
+    {
+        "id": "125",
+        "title": "Valid Palindrome",
+        "slug": "valid-palindrome",
+        "difficulty": "Easy"
+    },
+    {
+        "id": "206",
+        "title": "Reverse Linked List",
+        "slug": "reverse-linked-list",
+        "difficulty": "Easy"
+    },
+    {
+        "id": "704",
+        "title": "Binary Search",
+        "slug": "binary-search",
+        "difficulty": "Easy"
+    },
+    {
+        "id": "217",
+        "title": "Contains Duplicate",
+        "slug": "contains-duplicate",
+        "difficulty": "Easy"
+    },
+    {
+        "id": "53",
+        "title": "Maximum Subarray",
+        "slug": "maximum-subarray",
+        "difficulty": "Medium"
+    },
+    {
+        "id": "15",
+        "title": "3Sum",
+        "slug": "3sum",
+        "difficulty": "Medium"
+    },
+    {
+        "id": "49",
+        "title": "Group Anagrams",
+        "slug": "group-anagrams",
+        "difficulty": "Medium"
     }
-}
-"""
+]
 
 
 def load_solved():
@@ -52,110 +76,33 @@ def load_solved():
         return set()
 
 
-def get_problems():
-    variables = {
-        "categorySlug": "",
-        "skip": 0,
-        "limit": 100,
-        "searchKeyword": "",
-        "filters": {},
-        "sortBy": {}
-    }
-
-    response = requests.post(
-        LEETCODE_URL,
-        json={
-            "query": QUERY,
-            "variables": variables
-        },
-        headers={
-            "Content-Type": "application/json",
-            "User-Agent": "Mozilla/5.0"
-        },
-        timeout=30
-    )
-
-    response.raise_for_status()
-
-    result = response.json()
-
-    if "errors" in result:
-        raise Exception(
-            "LeetCode API error: " + str(result["errors"])
-        )
-
-    data = result.get("data")
-
-    if not data:
-        raise Exception("No data received from LeetCode")
-
-    problem_data = data.get("problemsetQuestionListV2")
-
-    if not problem_data:
-        raise Exception("Problem list not found")
-
-    return problem_data.get("questions", [])
-
-
 def select_problem():
     solved = load_solved()
-    problems = get_problems()
 
-    available = []
-
-    for problem in problems:
-
-        if not isinstance(problem, dict):
-            continue
-
-        slug = problem.get("titleSlug")
-
-        if not slug:
-            continue
-
-        # Don't select premium problems
-        if problem.get("paidOnly"):
-            continue
-
-        # Don't select previously used problems
-        if slug in solved:
-            continue
-
-        available.append(problem)
+    available = [
+        problem
+        for problem in PROBLEMS
+        if problem["slug"] not in solved
+    ]
 
     if not available:
-        raise Exception("No new problems available")
+        raise Exception("No new problems available!")
 
     return random.choice(available)
 
 
 if __name__ == "__main__":
-
     problem = select_problem()
 
-    print("")
     print("========================================")
     print("       TODAY'S LEETCODE PROBLEM")
     print("========================================")
-
-    print("ID:", problem.get("questionFrontendId"))
-    print("Title:", problem.get("title"))
-    print("Difficulty:", problem.get("difficulty"))
-    print("Slug:", problem.get("titleSlug"))
-
-    tags = problem.get("topicTags", [])
-
-    if tags:
-        print(
-            "Topics:",
-            ", ".join(tag.get("name", "") for tag in tags)
-        )
-
+    print("ID:", problem["id"])
+    print("Title:", problem["title"])
+    print("Difficulty:", problem["difficulty"])
+    print("Slug:", problem["slug"])
     print(
         "URL:",
-        "https://leetcode.com/problems/"
-        + problem["titleSlug"]
-        + "/"
+        f"https://leetcode.com/problems/{problem['slug']}/"
     )
-
     print("========================================")
