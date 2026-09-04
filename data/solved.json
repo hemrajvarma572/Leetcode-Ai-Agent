@@ -1,6 +1,7 @@
 {
   "solved": [
     "group-anagrams",
-    "valid-palindrome"
+    "valid-palindrome",
+    "3sum"
   ]
 }
