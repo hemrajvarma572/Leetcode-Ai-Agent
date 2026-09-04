@@ -3,6 +3,9 @@ name: Daily LeetCode Agent
 on:
   workflow_dispatch:
 
+  schedule:
+    - cron: "30 2 * * *"
+
 permissions:
   contents: write
 
