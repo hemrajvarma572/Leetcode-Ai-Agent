@@ -2,44 +2,34 @@ import json
 import random
 import requests
 
-PROBLEMS_URL = "https://raw.githubusercontent.com/karan/LeetCode/master/README.md"
+PROBLEMS_URL = (
+    "https://raw.githubusercontent.com/"
+    "mcaupybugs/leetcode-problems-db/master/merged_problems.json"
+)
+
 SOLVED_FILE = "data/solved.json"
 
 
 def load_solved():
     with open(SOLVED_FILE, "r") as file:
-        data = json.load(file)
-
-    return set(data["solved"])
+        return set(json.load(file)["solved"])
 
 
-def save_solved(problem_slug):
+def save_solved(slug):
     with open(SOLVED_FILE, "r") as file:
         data = json.load(file)
 
-    data["solved"].append(problem_slug)
+    data["solved"].append(slug)
 
     with open(SOLVED_FILE, "w") as file:
         json.dump(data, file, indent=2)
 
 
 def get_problems():
-    response = requests.get(PROBLEMS_URL)
+    response = requests.get(PROBLEMS_URL, timeout=30)
     response.raise_for_status()
 
-    problems = []
-
-    for line in response.text.splitlines():
-        if "leetcode.com/problems/" in line:
-            parts = line.split("leetcode.com/problems/")
-
-            if len(parts) > 1:
-                slug = parts[1].split("/")[0]
-
-                if slug and slug not in problems:
-                    problems.append(slug)
-
-    return problems
+    return response.json()
 
 
 def select_problem():
@@ -47,8 +37,9 @@ def select_problem():
     problems = get_problems()
 
     available = [
-        problem for problem in problems
-        if problem not in solved
+        p for p in problems
+        if p.get("problem_slug") not in solved
+        and not p.get("isPaidOnly", False)
     ]
 
     if not available:
@@ -61,6 +52,9 @@ if __name__ == "__main__":
     problem = select_problem()
 
     print("Today's LeetCode problem:")
-    print(problem)
+    print("ID:", problem.get("frontend_id"))
+    print("Title:", problem.get("title"))
+    print("Difficulty:", problem.get("difficulty"))
+    print("Slug:", problem.get("problem_slug"))
 
-    save_solved(problem)
+    save_solved(problem.get("problem_slug"))
