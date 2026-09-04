@@ -2,8 +2,12 @@ import os
 import json
 import re
 import requests
+import subprocess
+import tempfile
+import shutil
 
 from problem_selector import select_problem
+
 
 GEMINI_URL = (
     "https://generativelanguage.googleapis.com/v1beta/"
@@ -16,6 +20,8 @@ DATABASE_BASE = (
     "https://raw.githubusercontent.com/"
     "mcaupybugs/leetcode-problems-db/master/problems/"
 )
+
+MAX_FIX_ATTEMPTS = 3
 
 
 def load_solved():
@@ -42,7 +48,6 @@ def get_full_problem(problem):
     slug = problem["slug"]
 
     filename = f"{problem_id:04d}-{slug}.json"
-
     url = DATABASE_BASE + filename
 
     print("Downloading full problem...")
@@ -63,75 +68,18 @@ def get_full_problem(problem):
     return data
 
 
-def ask_gemini(problem):
+def clean_java_code(text):
+    text = re.sub(r"```java", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"```", "", text)
+
+    return text.strip()
+
+
+def call_gemini(prompt):
     api_key = os.environ.get("GEMINI_API_KEY")
 
     if not api_key:
         raise Exception("GEMINI_API_KEY is not configured")
-
-    full_problem = get_full_problem(problem)
-
-    title = full_problem.get("title", problem["title"])
-    description = full_problem.get("description", "")
-    constraints = full_problem.get("constraints", [])
-    examples = full_problem.get("examples", [])
-    topics = full_problem.get("topics", [])
-    java_code = full_problem.get("code_snippets", {}).get("java", "")
-
-    examples_text = "\n".join(
-        str(example.get("example_text", example))
-        if isinstance(example, dict)
-        else str(example)
-        for example in examples
-    )
-
-    constraints_text = "\n".join(
-        str(item) for item in constraints
-    )
-
-    topics_text = ", ".join(
-        str(item) for item in topics
-    )
-
-    prompt = f"""
-You are an expert competitive programmer.
-
-Solve the following LeetCode problem.
-
-TITLE:
-{title}
-
-DIFFICULTY:
-{problem.get("difficulty", "")}
-
-TOPICS:
-{topics_text}
-
-PROBLEM DESCRIPTION:
-{description}
-
-EXAMPLES:
-{examples_text}
-
-CONSTRAINTS:
-{constraints_text}
-
-JAVA STARTER CODE:
-{java_code}
-
-REQUIREMENTS:
-
-1. Return a correct LeetCode submission.
-2. Use Java.
-3. Preserve the required class name and method signature.
-4. Do NOT include a main method.
-5. Use an efficient algorithm appropriate for the constraints.
-6. Carefully consider edge cases.
-7. Return ONLY Java code.
-8. Do NOT use markdown code fences.
-"""
-
-    print("Asking Gemini to solve...")
 
     response = requests.post(
         GEMINI_URL,
@@ -157,58 +105,51 @@ REQUIREMENTS:
     try:
         text = data["candidates"][0]["content"]["parts"][0]["text"]
     except (KeyError, IndexError):
-        raise Exception(
-            "Gemini returned an unexpected response"
-        )
+        raise Exception("Gemini returned an unexpected response")
 
-    text = re.sub(r"```java", "", text, flags=re.IGNORECASE)
-    text = re.sub(r"```", "", text)
-
-    return text.strip()
+    return clean_java_code(text)
 
 
-def save_solution(problem, code):
-    os.makedirs("solutions", exist_ok=True)
+def build_problem_prompt(problem, full_problem):
+    title = full_problem.get("title", problem["title"])
 
-    filename = f"{problem['id']}-{problem['slug']}.java"
-    filepath = os.path.join("solutions", filename)
+    description = full_problem.get("description", "")
 
-    with open(filepath, "w") as file:
-        file.write(code)
+    constraints = full_problem.get("constraints", [])
 
-    return filepath
+    examples = full_problem.get("examples", [])
 
+    topics = full_problem.get("topics", [])
 
-def main():
+    code_snippets = full_problem.get("code_snippets", {})
 
-    problem = select_problem()
+    java_code = code_snippets.get("java", "")
 
-    print("")
-    print("========================================")
-    print("SELECTED PROBLEM")
-    print("========================================")
-    print("ID:", problem["id"])
-    print("Title:", problem["title"])
-    print("Difficulty:", problem["difficulty"])
-    print("========================================")
+    examples_text = "\n".join(
+        str(example.get("example_text", example))
+        if isinstance(example, dict)
+        else str(example)
+        for example in examples
+    )
 
-    code = ask_gemini(problem)
+    constraints_text = "\n".join(
+        str(item) for item in constraints
+    )
 
-    if len(code) < 50:
-        raise Exception("Generated Java code looks invalid")
+    topics_text = ", ".join(
+        str(item) for item in topics
+    )
 
-    filepath = save_solution(problem, code)
+    prompt = f"""
+You are an expert competitive programmer.
 
-    save_solved(problem["slug"])
+Solve this LeetCode problem in Java.
 
-    print("")
-    print("========================================")
-    print("SUCCESS")
-    print("========================================")
-    print("Problem:", problem["title"])
-    print("Java file:", filepath)
-    print("========================================")
+TITLE:
+{title}
 
+DIFFICULTY:
+{problem.get("difficulty", problem.get("difficulty_level", ""))}
 
-if __name__ == "__main__":
-    main()
+TOPICS:
+{topics_text}
