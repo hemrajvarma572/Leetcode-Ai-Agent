@@ -1,5 +1,6 @@
 {
   "solved": [
-    "group-anagrams"
+    "group-anagrams",
+    "valid-palindrome"
   ]
 }
