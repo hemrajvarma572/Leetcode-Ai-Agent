@@ -5,6 +5,7 @@
     "3sum",
     "contains-duplicate",
     "find-resultant-array-after-removing-anagrams",
-    "function-composition"
+    "function-composition",
+    "complement-of-base-10-integer"
   ]
 }
