@@ -2,6 +2,7 @@
   "solved": [
     "group-anagrams",
     "valid-palindrome",
-    "3sum"
+    "3sum",
+    "contains-duplicate"
   ]
 }
