@@ -7,6 +7,7 @@
     "find-resultant-array-after-removing-anagrams",
     "function-composition",
     "complement-of-base-10-integer",
-    "find-the-median-of-the-uniqueness-array"
+    "find-the-median-of-the-uniqueness-array",
+    "nth-highest-salary"
   ]
 }
