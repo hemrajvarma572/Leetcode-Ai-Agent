@@ -8,6 +8,7 @@
     "function-composition",
     "complement-of-base-10-integer",
     "find-the-median-of-the-uniqueness-array",
-    "nth-highest-salary"
+    "nth-highest-salary",
+    "maximum-average-subarray-i"
   ]
 }
