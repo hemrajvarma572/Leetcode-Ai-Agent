@@ -11,6 +11,7 @@
     "nth-highest-salary",
     "maximum-average-subarray-i",
     "maximize-the-minimum-game-score",
-    "get-biggest-three-rhombus-sums-in-a-grid"
+    "get-biggest-three-rhombus-sums-in-a-grid",
+    "partition-equal-subset-sum"
   ]
 }
