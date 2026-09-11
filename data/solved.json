@@ -12,6 +12,7 @@
     "maximum-average-subarray-i",
     "maximize-the-minimum-game-score",
     "get-biggest-three-rhombus-sums-in-a-grid",
-    "partition-equal-subset-sum"
+    "partition-equal-subset-sum",
+    "merge-k-sorted-lists"
   ]
 }
