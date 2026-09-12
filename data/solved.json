@@ -13,6 +13,7 @@
     "maximize-the-minimum-game-score",
     "get-biggest-three-rhombus-sums-in-a-grid",
     "partition-equal-subset-sum",
-    "merge-k-sorted-lists"
+    "merge-k-sorted-lists",
+    "minimum-fuel-cost-to-report-to-the-capital"
   ]
 }
