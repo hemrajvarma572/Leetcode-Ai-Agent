@@ -14,6 +14,7 @@
     "get-biggest-three-rhombus-sums-in-a-grid",
     "partition-equal-subset-sum",
     "merge-k-sorted-lists",
-    "minimum-fuel-cost-to-report-to-the-capital"
+    "minimum-fuel-cost-to-report-to-the-capital",
+    "find-the-count-of-monotonic-pairs-i"
   ]
 }
