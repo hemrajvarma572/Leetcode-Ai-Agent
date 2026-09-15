@@ -16,6 +16,7 @@
     "merge-k-sorted-lists",
     "minimum-fuel-cost-to-report-to-the-capital",
     "find-the-count-of-monotonic-pairs-i",
-    "number-of-valid-clock-times"
+    "number-of-valid-clock-times",
+    "find-minimum-diameter-after-merging-two-trees"
   ]
 }
