@@ -21,6 +21,7 @@
     "longest-unequal-adjacent-groups-subsequence-i",
     "fibonacci-number",
     "maximum-number-of-pairs-in-array",
-    "html-entity-parser"
+    "html-entity-parser",
+    "count-the-number-of-good-partitions"
   ]
 }
