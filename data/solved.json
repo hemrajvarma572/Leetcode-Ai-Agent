@@ -23,6 +23,7 @@
     "maximum-number-of-pairs-in-array",
     "html-entity-parser",
     "count-the-number-of-good-partitions",
-    "execute-asynchronous-functions-in-parallel"
+    "execute-asynchronous-functions-in-parallel",
+    "minimum-cost-to-connect-two-groups-of-points"
   ]
 }
