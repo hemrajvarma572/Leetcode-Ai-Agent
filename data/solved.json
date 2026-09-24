@@ -25,6 +25,7 @@
     "count-the-number-of-good-partitions",
     "execute-asynchronous-functions-in-parallel",
     "minimum-cost-to-connect-two-groups-of-points",
-    "count-valid-paths-in-a-tree"
+    "count-valid-paths-in-a-tree",
+    "get-maximum-in-generated-array"
   ]
 }
