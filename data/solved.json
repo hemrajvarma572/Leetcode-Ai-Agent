@@ -26,6 +26,7 @@
     "execute-asynchronous-functions-in-parallel",
     "minimum-cost-to-connect-two-groups-of-points",
     "count-valid-paths-in-a-tree",
-    "get-maximum-in-generated-array"
+    "get-maximum-in-generated-array",
+    "visit-array-positions-to-maximize-score"
   ]
 }
