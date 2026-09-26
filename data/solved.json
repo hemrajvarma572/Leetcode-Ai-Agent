@@ -27,6 +27,7 @@
     "minimum-cost-to-connect-two-groups-of-points",
     "count-valid-paths-in-a-tree",
     "get-maximum-in-generated-array",
-    "visit-array-positions-to-maximize-score"
+    "visit-array-positions-to-maximize-score",
+    "maximize-the-confusion-of-an-exam"
   ]
 }
