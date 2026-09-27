@@ -28,6 +28,7 @@
     "count-valid-paths-in-a-tree",
     "get-maximum-in-generated-array",
     "visit-array-positions-to-maximize-score",
-    "maximize-the-confusion-of-an-exam"
+    "maximize-the-confusion-of-an-exam",
+    "widest-vertical-area-between-two-points-containing-no-points"
   ]
 }
