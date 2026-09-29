@@ -30,6 +30,7 @@
     "visit-array-positions-to-maximize-score",
     "maximize-the-confusion-of-an-exam",
     "widest-vertical-area-between-two-points-containing-no-points",
-    "minimum-difference-in-sums-after-removal-of-elements"
+    "minimum-difference-in-sums-after-removal-of-elements",
+    "sum-of-imbalance-numbers-of-all-subarrays"
   ]
 }
