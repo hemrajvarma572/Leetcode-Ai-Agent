@@ -33,6 +33,7 @@
     "minimum-difference-in-sums-after-removal-of-elements",
     "sum-of-imbalance-numbers-of-all-subarrays",
     "arithmetic-slices",
-    "minimum-number-of-operations-to-make-string-sorted"
+    "minimum-number-of-operations-to-make-string-sorted",
+    "second-largest-digit-in-a-string"
   ]
 }
