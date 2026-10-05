@@ -34,6 +34,7 @@
     "sum-of-imbalance-numbers-of-all-subarrays",
     "arithmetic-slices",
     "minimum-number-of-operations-to-make-string-sorted",
-    "second-largest-digit-in-a-string"
+    "second-largest-digit-in-a-string",
+    "find-minimum-log-transportation-cost"
   ]
 }
