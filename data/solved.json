@@ -35,6 +35,7 @@
     "arithmetic-slices",
     "minimum-number-of-operations-to-make-string-sorted",
     "second-largest-digit-in-a-string",
-    "find-minimum-log-transportation-cost"
+    "find-minimum-log-transportation-cost",
+    "number-of-black-blocks"
   ]
 }
