@@ -37,6 +37,7 @@
     "second-largest-digit-in-a-string",
     "find-minimum-log-transportation-cost",
     "number-of-black-blocks",
-    "maximum-matching-of-players-with-trainers"
+    "maximum-matching-of-players-with-trainers",
+    "last-stone-weight"
   ]
 }
