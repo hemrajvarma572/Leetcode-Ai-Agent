@@ -38,6 +38,7 @@
     "find-minimum-log-transportation-cost",
     "number-of-black-blocks",
     "maximum-matching-of-players-with-trainers",
-    "last-stone-weight"
+    "last-stone-weight",
+    "find-palindrome-with-fixed-length"
   ]
 }
