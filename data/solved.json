@@ -39,6 +39,7 @@
     "number-of-black-blocks",
     "maximum-matching-of-players-with-trainers",
     "last-stone-weight",
-    "find-palindrome-with-fixed-length"
+    "find-palindrome-with-fixed-length",
+    "letter-tile-possibilities"
   ]
 }
